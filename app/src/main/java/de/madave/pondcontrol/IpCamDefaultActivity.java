@@ -1,7 +1,9 @@
 package de.madave.pondcontrol;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,11 +15,13 @@ import com.github.niqdev.mjpeg.MjpegView;
 public class IpCamDefaultActivity extends AppCompatActivity {
 
     MjpegView mjpegView;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ip_cam_default);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mjpegView = (MjpegView) findViewById(R.id.mjpegViewDefault);
     }
 
@@ -25,8 +29,8 @@ public class IpCamDefaultActivity extends AppCompatActivity {
         int TIMEOUT = 5; //seconds
 
         Mjpeg.newInstance()
-                .credential("USERNAME", "PASSWORD")
-                .open("http://187.157.229.132:80/mjpg/video.mjpg", TIMEOUT)
+                .credential(sharedPreferences.getString("username",""), sharedPreferences.getString("password", ""))
+                .open(sharedPreferences.getString("url", ""), TIMEOUT)
                 .subscribe(inputStream -> {
                     mjpegView.setSource(inputStream);
                     mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
