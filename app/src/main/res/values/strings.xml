@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">pondcontrol</string>
+    <string name="string_stream">Stream</string>
+    <string name="string_settings">Settings</string>
+</resources>
