@@ -3,7 +3,6 @@ package de.madave.pondcontrol;
 import android.app.Application;
 
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
@@ -26,16 +25,17 @@ public class SecurityLauncher extends Application {
                     return true;
                 }});
             SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new X509TrustManager[]{new X509TrustManager(){
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
 
-                }
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            X509TrustManager trustManager = new X509TrustManager()
+            {
+                public void checkClientTrusted(X509Certificate[] chain, String authType) { }
+                public void checkServerTrusted(X509Certificate[] chain, String authType) { }
 
-                }
                 public X509Certificate[] getAcceptedIssuers() {
                     return new X509Certificate[0];
-                }}}, new SecureRandom());
+                }};
+
+            context.init(null, new X509TrustManager[]{trustManager}, new SecureRandom());
 
             HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
 
